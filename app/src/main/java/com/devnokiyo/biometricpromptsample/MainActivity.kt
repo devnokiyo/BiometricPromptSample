@@ -16,11 +16,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         cancelSignal = CancellationSignal()
-        val builder = BiometricPrompt.Builder(this)
-        builder.setTitle("生体認証します")
-        builder.setNegativeButton("キャンセル", mainExecutor, DialogInterface.OnClickListener { dialogInterface, i ->
-            cancelSignal.cancel()
-        })
+        val builder = BiometricPrompt.Builder(this).apply {
+            setTitle("生体認証します")
+            setNegativeButton("キャンセル", mainExecutor, DialogInterface.OnClickListener { _, _ ->
+                cancelSignal.cancel()
+            })
+        }
         builder.build().authenticate(cancelSignal, mainExecutor, object : BiometricPrompt.AuthenticationCallback() {
             override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
                 when (errorCode) {
